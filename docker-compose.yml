@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    tty: true
+    stdin_open: true
+
+    volumes:
+      - .:/app
+
+# start the app via 'docker-compose run --rm app' - this will create new container and remove it after container stopped
+
+# update the image via 'docker-compose build app'
