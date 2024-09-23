@@ -1,12 +1,22 @@
 services:
   app:
+    ports:
+      - "7171:7171"
     build: .
     tty: true
     stdin_open: true
-
     volumes:
       - .:/app
+      # host should have CONFIG environment variable set up, and store there all required config files, like 
+      # provider-config.yaml for subfinder 
+      # set up environment variable:
+      #   - Windows: PowerShell (Admin) -> [Environment]::SetEnvironmentVariable("CONFIG", "C:\.config", "User")
+      - ${CONFIG}:/.config
 
 # start the app via 'docker-compose run --rm app' - this will create new container and remove it after container stopped
-
+#   the ports binding won't work due to some intrinsic logic
+#   you'll have to manually specify port via -p flag, e.g. docker-compose run -p 7171:7171 --rm app
+#
+# you can start container from random folder with docker-compose -f [docker-compose.yml location] run --rm app
+#
 # update the image via 'docker-compose build app'
