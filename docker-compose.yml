@@ -1,22 +1,28 @@
+# use .env file to setup environment variables
+#   PROJECT_DIR - path to folder with Dockerfile
+#   CONFIG_FOLDER - path to folder with config files, like provider-config.yaml for subfinder
+
 services:
   app:
+# this ports mapping doesn't work properly, so we have to configure it via cli params. It serves here more documentation 
+# function, than anything functional.
     ports:
-      - "7171:7171"
-    build: .
+      - "7171:7171" # subfinder server
+    build: ${PROJECT_DIR}
     tty: true
     stdin_open: true
     volumes:
       - .:/app
-      # host should have CONFIG environment variable set up, and store there all required config files, like 
-      # provider-config.yaml for subfinder 
-      # set up environment variable:
-      #   - Windows: PowerShell (Admin) -> [Environment]::SetEnvironmentVariable("CONFIG", "C:\.config", "User")
-      - ${CONFIG}:/.config
+      - ${CONFIG_FOLDER}:/.config
 
 # start the app via 'docker-compose run --rm app' - this will create new container and remove it after container stopped
 #   the ports binding won't work due to some intrinsic logic
 #   you'll have to manually specify port via -p flag, e.g. docker-compose run -p 7171:7171 --rm app
 #
-# you can start container from random folder with docker-compose -f [docker-compose.yml location] run --rm app
+# you can start container from random folder with 
+#   Windows:
+#     docker-compose -f [docker-compose.yml location] --project-directory %cd% run --rm app
+#   Linux:
+#     docker-compose -f [docker-compose.yml location] --project-directory $(pwd) run --rm app
 #
 # update the image via 'docker-compose build app'
